@@ -1,20 +1,24 @@
 import streamlit as st
-from transformers import pipeline
-from PIL import Image
 
-pipeline = pipeline(task="image-classification", model="julien-c/hotdog-not-hotdog")
+st.title('Простой калькулятор')
 
-st.title("Hot Dog? Or Not?")
+num1 = st.number_input('Введите первое число:', step=1)
+num2 = st.number_input('Введите второе число:', step=1)
 
-file_name = st.file_uploader("Upload a hot dog candidate image")
+operation = st.selectbox('Выберите операцию:', ['Сложение', 'Вычитание', 'Умножение', 'Деление'])
 
-if file_name is not None:
-    col1, col2 = st.columns(2)
+result = 0
 
-    image = Image.open(file_name)
-    col1.image(image, use_column_width=True)
-    predictions = pipeline(image)
+if operation == 'Сложение':
+    result = num1 + num2
+elif operation == 'Вычитание':
+    result = num1 - num2
+elif operation == 'Умножение':
+    result = num1 * num2
+elif operation == 'Деление':
+    if num2 != 0:
+        result = num1 / num2
+    else:
+        st.error('На ноль делить нельзя!')
 
-    col2.header("Probabilities")
-    for p in predictions:
-        col2.subheader(f"{ p['label'] }: { round(p['score'] * 100, 1)}%")
+st.write(f'Результат операции {operation}: {result}')
