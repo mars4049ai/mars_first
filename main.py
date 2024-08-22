@@ -1,2 +1,9 @@
 import streamlit as st
-uploaded_file = st.file_uploader("Choose a file")
+
+number = st.number_input(
+    "Insert a number", value=None, placeholder="Type a number..."
+)
+number1 = st.number_input(
+    "Insert a number", value=None, placeholder="Type a number..."
+)
+st.write(number + number1)
