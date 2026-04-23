@@ -1,6 +1,9 @@
 import numpy as np
 from scipy.integrate import solve_ivp
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+mpl.rcParams["font.family"] = "DejaVu Sans"
 
 
 SPEED_OF_LIGHT = 3e8
@@ -151,16 +154,16 @@ def plot_cw_analysis(params, title_prefix=""):
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
     ax1.plot(pump_ratios, q_ss_values, "b-", linewidth=2)
-    ax1.set_xlabel("Pump Ratio (n0 / n_th)")
-    ax1.set_ylabel("Steady-State Photon Density (m^-3)")
-    ax1.set_title(f"{title_prefix}CW Photon Density vs Pump Ratio")
+    ax1.set_xlabel("Коэффициент накачки (n0 / n_th)")
+    ax1.set_ylabel("Стационарная плотность фотонов (м^-3)")
+    ax1.set_title(f"{title_prefix}Плотность фотонов НГ от коэффициента накачки")
     ax1.grid(True, alpha=0.3)
     ax1.ticklabel_format(axis="y", style="scientific", scilimits=(0, 0))
 
     ax2.plot(pump_ratios, np.array(freq_values) * 1e-3, "r-", linewidth=2)
-    ax2.set_xlabel("Pump Ratio (n0 / n_th)")
-    ax2.set_ylabel("Relaxation Frequency (kHz)")
-    ax2.set_title(f"{title_prefix}Relaxation Oscillation Frequency")
+    ax2.set_xlabel("Коэффициент накачки (n0 / n_th)")
+    ax2.set_ylabel("Частота релаксационных колебаний (кГц)")
+    ax2.set_title(f"{title_prefix}Частота релаксационных колебаний")
     ax2.grid(True, alpha=0.3)
 
     plt.tight_layout()
@@ -184,17 +187,17 @@ def plot_relaxation_oscillations(params, title_prefix=""):
     t_us = t * 1e6
 
     ax1.plot(t_us, n, "b-", linewidth=1.5)
-    ax1.axhline(y=n_th, color="r", linestyle="--", linewidth=1, label="n_th")
-    ax1.set_ylabel("Population Inversion (m^-3)")
-    ax1.set_title(f"{title_prefix}Relaxation Oscillations")
+    ax1.axhline(y=n_th, color="r", linestyle="--", linewidth=1, label="n_пор")
+    ax1.set_ylabel("Инверсия населённостей (м^-3)")
+    ax1.set_title(f"{title_prefix}Релаксационные колебания")
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     ax1.ticklabel_format(axis="y", style="scientific", scilimits=(0, 0))
 
     ax2.plot(t_us, q, "r-", linewidth=1.5)
-    ax2.axhline(y=q_ss, color="b", linestyle="--", linewidth=1, label="q_ss")
-    ax2.set_xlabel("Time (us)")
-    ax2.set_ylabel("Photon Density (m^-3)")
+    ax2.axhline(y=q_ss, color="b", linestyle="--", linewidth=1, label="q_стац")
+    ax2.set_xlabel("Время (мкс)")
+    ax2.set_ylabel("Плотность фотонов (м^-3)")
     ax2.legend()
     ax2.grid(True, alpha=0.3)
     ax2.ticklabel_format(axis="y", style="scientific", scilimits=(0, 0))
@@ -221,22 +224,22 @@ def plot_q_switching(params, title_prefix=""):
 
     ax1.plot(t_us, n, "b-", linewidth=1.5)
     n_th = threshold_inversion(tau_c_high, B)
-    ax1.axhline(y=n_th, color="r", linestyle="--", linewidth=1, label="n_th (high Q)")
-    ax1.set_ylabel("Population Inversion (m^-3)")
-    ax1.set_title(f"{title_prefix}Q-Switched Giant Pulse")
+    ax1.axhline(y=n_th, color="r", linestyle="--", linewidth=1, label="n_пор (высокая добротность)")
+    ax1.set_ylabel("Инверсия населённостей (м^-3)")
+    ax1.set_title(f"{title_prefix}Гигантский импульс (модуляция добротности)")
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     ax1.ticklabel_format(axis="y", style="scientific", scilimits=(0, 0))
 
     ax2.plot(t_us, q, "r-", linewidth=1.5)
-    ax2.set_xlabel("Time (us)")
-    ax2.set_ylabel("Photon Density (m^-3)")
+    ax2.set_xlabel("Время (мкс)")
+    ax2.set_ylabel("Плотность фотонов (м^-3)")
     ax2.grid(True, alpha=0.3)
     ax2.ticklabel_format(axis="y", style="scientific", scilimits=(0, 0))
 
     switch_time = pump_time * 1e6
     for ax in (ax1, ax2):
-        ax.axvline(x=switch_time, color="g", linestyle=":", linewidth=1.5, label="Q-switch")
+        ax.axvline(x=switch_time, color="g", linestyle=":", linewidth=1.5, label="Переключение добротности")
     ax1.legend()
     ax2.legend()
 
@@ -275,10 +278,10 @@ def plot_phase_portrait(params, title_prefix=""):
         ax.plot(n_traj[0], q_traj[0], "o", color=colors[i], markersize=6)
         ax.plot(n_traj[-1], q_traj[-1], "s", color=colors[i], markersize=6)
 
-    ax.plot(n_th, q_ss, "k*", markersize=15, zorder=5, label="Steady State")
-    ax.set_xlabel("Population Inversion n (m^-3)")
-    ax.set_ylabel("Photon Density q (m^-3)")
-    ax.set_title(f"{title_prefix}Phase Portrait (n vs q)")
+    ax.plot(n_th, q_ss, "k*", markersize=15, zorder=5, label="Стационарная точка")
+    ax.set_xlabel("Инверсия населённостей n (м^-3)")
+    ax.set_ylabel("Плотность фотонов q (м^-3)")
+    ax.set_title(f"{title_prefix}Фазовый портрет (n и q)")
     ax.legend()
     ax.grid(True, alpha=0.3)
     ax.ticklabel_format(style="scientific", scilimits=(0, 0))
@@ -303,13 +306,13 @@ def plot_pump_threshold_scan(params, title_prefix=""):
         t, n, q = simulate_transient(n0_val, tau_c, tau_r, B, (0, t_end))
         t_us = t * 1e6
         axes[idx].plot(t_us, q, "r-", linewidth=1.5)
-        axes[idx].set_ylabel("q (m^-3)")
+        axes[idx].set_ylabel("q (м^-3)")
         axes[idx].set_title(f"r = n0/n_th = {r:.1f}")
         axes[idx].grid(True, alpha=0.3)
         axes[idx].ticklabel_format(axis="y", style="scientific", scilimits=(0, 0))
 
-    axes[-1].set_xlabel("Time (us)")
-    fig.suptitle(f"{title_prefix}Photon Density for Different Pump Ratios", fontsize=14, y=1.01)
+    axes[-1].set_xlabel("Время (мкс)")
+    fig.suptitle(f"{title_prefix}Плотность фотонов при различных коэффициентах накачки", fontsize=14, y=1.01)
     plt.tight_layout()
     return fig
 
